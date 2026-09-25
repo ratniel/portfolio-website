@@ -1,10 +1,15 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useReducedMotion, useScroll, useSpring } from "motion/react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import { useMemo, useState } from "react";
 import * as THREE from "three";
-import { BlackHole } from "@/components/experience/black-hole";
 import { StarField } from "@/components/experience/star-field";
 
 type SceneProps = {
@@ -37,13 +42,10 @@ function Scene({ limitedDevice, progress }: SceneProps) {
   });
 
   return (
-    <>
-      <StarField
-        count={limitedDevice ? (compact ? 70 : 120) : compact ? 130 : 260}
-        progress={progress}
-      />
-      <BlackHole compact={compact} progress={progress} />
-    </>
+    <StarField
+      count={limitedDevice ? (compact ? 70 : 120) : compact ? 130 : 260}
+      progress={progress}
+    />
   );
 }
 
@@ -55,11 +57,16 @@ export function SpaceExperience() {
       const webgl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
 
       return {
+        compactViewport: window.matchMedia("(max-width: 680px)").matches,
         limitedDevice: navigator.hardwareConcurrency <= 4,
         webglAvailable: Boolean(webgl),
       };
     } catch {
-      return { limitedDevice: true, webglAvailable: false };
+      return {
+        compactViewport: true,
+        limitedDevice: true,
+        webglAvailable: false,
+      };
     }
   });
   const { scrollYProgress } = useScroll();
@@ -69,13 +76,32 @@ export function SpaceExperience() {
     mass: 0.32,
     restDelta: 0.0005,
   });
+  const imageScale = useTransform(
+    progress,
+    [0, 0.34],
+    capabilities.compactViewport ? [1, 1.28] : [1, 1.6],
+  );
+  const imageX = useTransform(
+    progress,
+    [0, 0.34],
+    capabilities.compactViewport ? ["1%", "-1%"] : ["6%", "-3%"],
+  );
+  const imageY = useTransform(progress, [0, 0.34], ["0%", "4%"]);
 
   if (reduceMotion || !capabilities.webglAvailable) {
-    return <div className="space-fallback" aria-hidden="true" />;
+    return (
+      <div className="space-experience" aria-hidden="true">
+        <div className="black-hole-art" />
+      </div>
+    );
   }
 
   return (
     <div className="space-experience" aria-hidden="true">
+      <motion.div
+        className="black-hole-art"
+        style={{ scale: imageScale, x: imageX, y: imageY }}
+      />
       <Canvas
         camera={{ position: [0, 0, 8], fov: 45, near: 0.1, far: 80 }}
         dpr={capabilities.limitedDevice ? 1 : [1, 1.5]}

@@ -28,7 +28,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Update user-facing copy in `src/content/`. The homepage is composed in `src/app/page.tsx`.
 
-The fixed, scroll-linked visual layer lives under `src/components/experience/`. It is loaded client-side, remains independent of the page content, and falls back to a static atmospheric background when reduced motion is requested or WebGL is unavailable.
+The fixed, scroll-linked visual layer lives under `src/components/experience/`. Its hero artwork is stored in `public/images/black-hole-hero.jpg`. The experience is loaded client-side, remains independent of the page content, and falls back to a static scene when reduced motion is requested or WebGL is unavailable.
 
 ## Keeping this README current
 
