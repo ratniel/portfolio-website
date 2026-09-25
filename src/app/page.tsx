@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/navigation";
+import { ExperienceLayer } from "@/components/experience/experience-layer";
 import { Footer } from "@/components/sections/footer";
 import { Hero } from "@/components/sections/hero";
 import { Journey } from "@/components/sections/journey";
@@ -11,6 +12,7 @@ import { workEntries } from "@/content/work";
 
 export default function Home() {
   return <>
+    <ExperienceLayer />
     <Navigation items={siteContent.navigation} name={siteContent.name} />
     <main id="top">
       <Hero {...siteContent.hero} />

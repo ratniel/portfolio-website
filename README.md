@@ -1,6 +1,6 @@
 # Ratniel Kokane — Portfolio
 
-A static Next.js portfolio skeleton for Ratniel Kokane. The homepage is built with the App Router, TypeScript, React Server Components, and Tailwind CSS v4.
+A Next.js portfolio for Ratniel Kokane. The homepage combines a server-rendered content skeleton with a progressively enhanced, scroll-linked space scene.
 
 ## Requirements
 
@@ -23,10 +23,12 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Project structure
 
 - `src/app/` — App Router page, layout, and global styles
-- `src/components/` — navigation and homepage sections
+- `src/components/` — navigation, homepage sections, and the isolated visual experience
 - `src/content/` — editable site, work, and project content
 
 Update user-facing copy in `src/content/`. The homepage is composed in `src/app/page.tsx`.
+
+The fixed, scroll-linked visual layer lives under `src/components/experience/`. It is loaded client-side, remains independent of the page content, and falls back to a static atmospheric background when reduced motion is requested or WebGL is unavailable.
 
 ## Keeping this README current
 
