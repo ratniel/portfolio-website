@@ -28,6 +28,10 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Update user-facing copy in `src/content/`. The homepage is composed in `src/app/page.tsx`.
 
+## Keeping this README current
+
+When a change alters the project structure, setup steps, or available scripts, update this README in the same change. Keep the structure and development instructions representative of the repository as it grows.
+
 ## Checks
 
 ```bash
