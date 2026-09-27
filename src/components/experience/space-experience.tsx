@@ -8,9 +8,9 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { BlackHole } from "@/components/experience/black-hole";
-import { StarField } from "@/components/experience/star-field";
+import { StarField, type AvoidArea } from "@/components/experience/star-field";
 
 // Scroll fractions where each section's top reaches the top of the viewport.
 type SectionStops = { work: number; projects: number };
@@ -131,6 +131,18 @@ export function SpaceExperience() {
     [0, work, projects],
     [0.35, 0.3, 1],
   ]);
+  // Stars react to the cursor in the hero and again once only deep space is left.
+  const lensing = useJourney(progress, stops, ({ work, projects }) => [
+    [work * 0.25, work * 0.5, projects, projects + (1 - projects) * 0.05],
+    [1, 0, 0, 1],
+  ]);
+  const art = useRef<HTMLDivElement>(null);
+  // In the hero, leave the stars around the black hole's glow alone.
+  const avoidHole = useCallback((): AvoidArea | null => {
+    if (!art.current || holeOpacity.get() < 0.05) return null;
+    const box = art.current.getBoundingClientRect();
+    return { x: box.left + box.width * 0.744, y: box.top + box.height * 0.457, radius: box.width * 0.24 };
+  }, [holeOpacity]);
   const farScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.08, 1.2]]);
   const midScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.22, 1.5]]);
   const nearScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.55, 2.3]]);
@@ -148,12 +160,13 @@ export function SpaceExperience() {
         y={holeY}
         rotate={holeRotate}
         opacity={holeOpacity}
+        artRef={art}
       />
       <motion.div className="deep-space-glow" style={{ opacity: glowOpacity }} />
       <div className="star-layers">
-        <StarField count={70} seed={1} radius={farStars} scale={farScale} opacity={starOpacity} />
-        <StarField count={40} seed={2} radius={midStars} scale={midScale} opacity={starOpacity} />
-        <StarField count={18} seed={3} radius={nearStars} scale={nearScale} opacity={starOpacity} />
+        <StarField count={70} seed={1} radius={farStars} scale={farScale} opacity={starOpacity} lensing={lensing} avoidArea={avoidHole} />
+        <StarField count={40} seed={2} radius={midStars} scale={midScale} opacity={starOpacity} lensing={lensing} avoidArea={avoidHole} />
+        <StarField count={18} seed={3} radius={nearStars} scale={nearScale} opacity={starOpacity} lensing={lensing} avoidArea={avoidHole} />
       </div>
     </div>
   );

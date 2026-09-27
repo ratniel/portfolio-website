@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useTransform, type MotionValue } from "motion/react";
+import type { Ref } from "react";
 
 type BlackHoleProps = {
   scale: MotionValue<number>;
@@ -9,6 +10,7 @@ type BlackHoleProps = {
   y: MotionValue<string>;
   rotate: MotionValue<number>;
   opacity: MotionValue<number>;
+  artRef: Ref<HTMLDivElement>;
 };
 
 // Faint enlarged copies of the artwork, screened over it, smear the glow outward
@@ -35,10 +37,10 @@ function GlowEcho({ scale, spread, reach, strength }: {
   );
 }
 
-export function BlackHole({ scale, spread, x, y, rotate, opacity }: BlackHoleProps) {
+export function BlackHole({ scale, spread, x, y, rotate, opacity, artRef }: BlackHoleProps) {
   return (
     <motion.div className="black-hole" style={{ x, y, rotate, opacity }}>
-      <motion.div className="black-hole-art" style={{ scale }} />
+      <motion.div ref={artRef} className="black-hole-art" style={{ scale }} />
       {glowEchoes.map((echo) => (
         <GlowEcho key={echo.reach} scale={scale} spread={spread} {...echo} />
       ))}
