@@ -18,7 +18,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-height); --header-height: 76px; }
 body {
   margin: 0;
   overflow-x: clip;
@@ -102,32 +102,62 @@ body {
     url("/images/black-hole-hero.jpg") center / cover no-repeat,
     var(--surface);
 }
-.site-header,
 main,
 .site-footer {
   position: relative;
   z-index: 1;
 }
+main { padding-top: var(--header-height); }
 a { color: inherit; text-decoration: none; }
 a:hover { color: var(--accent); }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 ::selection { background: #465786; color: white; }
 
 .site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 20;
   width: min(100% - 96px, 1200px);
-  height: 76px;
+  height: var(--header-height);
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--line);
 }
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(50% - 50vw) -1px;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgb(11 13 18 / .88), rgb(11 13 18 / .62));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.scroll-progress {
+  position: fixed;
+  top: calc(var(--header-height) + 36px);
+  bottom: 44px;
+  right: clamp(14px, calc((100vw - 1200px) / 4), 72px);
+  z-index: 15;
+  width: 7px;
+  pointer-events: none;
+  --progress: 0;
+}
+.scroll-progress-track, .scroll-progress-fill { position: absolute; inset: 0 3px; }
+.scroll-progress-track { background: var(--line); }
+.scroll-progress-fill { background: linear-gradient(to bottom, rgb(168 185 244 / .15), rgb(168 185 244 / .7)); transform: scaleY(var(--progress)); transform-origin: top; }
+.scroll-progress-end { position: absolute; left: 1px; width: 5px; height: 5px; border: 1px solid #4c5572; border-radius: 50%; background: var(--surface); }
+.scroll-progress-end:first-child { top: -6px; }
+.scroll-progress-end:last-of-type { bottom: -6px; }
+.scroll-progress-marker { position: absolute; inset: 0; transform: translateY(calc(var(--progress) * 100%)); }
+.scroll-progress-marker::before { content: ""; position: absolute; top: -3.5px; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgb(168 185 244 / .7); }
 .wordmark { white-space: nowrap; font-size: 14px; font-weight: 550; letter-spacing: .02em; }
 .site-header nav { display: flex; gap: clamp(22px, 4vw, 54px); }
 .site-header nav a { font-family: var(--font-mono), monospace; color: var(--muted); font-size: 12px; }
 .section-shell { width: min(100% - 96px, 1200px); margin-inline: auto; }
 .hero {
-  min-height: min(824px, calc(100dvh - 76px));
+  min-height: min(824px, calc(100dvh - var(--header-height)));
   padding-block: clamp(96px, 15vh, 166px) 84px;
   display: flex;
   flex-direction: column;
@@ -187,11 +217,13 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   }
   .black-hole-art { opacity: .72; }
   .site-header, .section-shell { width: min(100% - 40px, 1200px); }
-  .site-header { height: 68px; gap: 18px; }
+  html { --header-height: 68px; }
+  .site-header { gap: 18px; }
+  .scroll-progress { right: 6px; top: calc(var(--header-height) + 24px); bottom: 28px; opacity: .7; }
   .wordmark { font-size: 12px; }
   .site-header nav { gap: clamp(12px, 4vw, 21px); }
   .site-header nav a { font-size: 10px; }
-  .hero { min-height: calc(100dvh - 68px); padding-block: 112px 42px; }
+  .hero { min-height: calc(100dvh - var(--header-height)); padding-block: 112px 42px; }
   .hero-name { font-size: clamp(30px, 8.5vw, 40px); }
   .hero-tagline { margin-top: 18px; font-size: clamp(42px, 12vw, 58px); letter-spacing: -.055em; }
   .hero-intro { font-size: 16px; }

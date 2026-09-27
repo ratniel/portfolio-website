@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/navigation";
+import { ScrollProgress } from "@/components/scroll-progress";
 import { ExperienceLayer } from "@/components/experience/experience-layer";
 import { Footer } from "@/components/sections/footer";
 import { Hero } from "@/components/sections/hero";
@@ -13,6 +14,7 @@ import { workEntries } from "@/content/work";
 export default function Home() {
   return <>
     <ExperienceLayer />
+    <ScrollProgress />
     <Navigation items={siteContent.navigation} name={siteContent.name} />
     <main id="top">
       <Hero name={siteContent.name} {...siteContent.hero} />
