@@ -5,6 +5,7 @@ import {
   useReducedMotion,
   useScroll,
   useSpring,
+  useMotionValue,
   useTransform,
   type MotionValue,
 } from "motion/react";
@@ -144,11 +145,9 @@ export function SpaceExperience() {
     [0, work, projects],
     [0.35, 0.3, 1],
   ]);
-  // Stars react to the cursor in the hero and again once only deep space is left.
-  const lensing = useJourney(progress, stops, ({ work, projects }) => [
-    [work * 0.25, work * 0.5, projects, projects + (1 - projects) * 0.05],
-    [1, 0, 0, 1],
-  ]);
+  // Stars react to the cursor throughout; the area around the black hole is left alone
+  // (see avoidHole), so the stars it uncovers on its way left respond straight away.
+  const lensing = useMotionValue(1);
   const art = useRef<HTMLDivElement>(null);
   // In the hero, leave the stars around the black hole's glow alone.
   const avoidHole = useCallback((): AvoidArea | null => {
