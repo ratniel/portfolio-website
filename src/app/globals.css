@@ -132,9 +132,9 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   position: absolute;
   inset: 0 calc(50% - 50vw) -1px;
   z-index: -1;
-  /* A plain gradient rather than backdrop-filter: blurring the moving scene under a
-     fixed header would be recomputed on every scroll frame. */
-  background: linear-gradient(to bottom, rgb(11 13 18 / .94), rgb(11 13 18 / .8));
+  background: linear-gradient(to bottom, rgb(11 13 18 / .88), rgb(11 13 18 / .62));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .scroll-progress {
   position: fixed;
