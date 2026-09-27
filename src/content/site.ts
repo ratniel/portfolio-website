@@ -27,6 +27,7 @@ export const siteContent = {
       "I build things to answer questions I can’t stop thinking about: an LLM pipeline that reads 10,000+ news articles a day, an agent that searches over a thousand government schemes, and speech-to-text that runs entirely on my Mac.",
     links: [
       { label: "github", href: "https://github.com/ratniel" },
+      { label: "linkedin", href: "https://www.linkedin.com/in/ratniel" },
       { label: "email", href: "mailto:ratniel.kokane1729@gmail.com" },
     ],
     scrollCue: "Scroll to explore",
