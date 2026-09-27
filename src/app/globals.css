@@ -25,12 +25,74 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--surface);
   color: var(--text);
   font-family: var(--font-geist-sans), sans-serif;
   font-size: 16px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+}
+.space-experience,
+.space-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.black-hole {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transform-origin: 73% 48%;
+  will-change: transform, opacity;
+}
+.black-hole-art {
+  position: absolute;
+  inset: 0;
+  background: url("/images/black-hole-hero.jpg") center / cover no-repeat;
+}
+.deep-space-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 42% 34% at 70% 42%, rgb(96 104 176 / 22%), transparent 70%),
+    radial-gradient(ellipse 22% 18% at 22% 78%, rgb(217 183 137 / 7%), transparent 70%);
+  will-change: opacity;
+}
+.star-layers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.star-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #c6d1f5;
+  transform-origin: 72% 46%;
+  will-change: transform, opacity;
+}
+.space-experience::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(90deg, rgb(11 13 18 / 94%) 0, rgb(11 13 18 / 72%) 42%, transparent 78%);
+}
+.space-fallback {
+  background:
+    linear-gradient(90deg, rgb(11 13 18 / 94%) 0, rgb(11 13 18 / 72%) 42%, transparent 78%),
+    url("/images/black-hole-hero.jpg") center / cover no-repeat,
+    var(--surface);
+}
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 1;
 }
 a { color: inherit; text-decoration: none; }
 a:hover { color: var(--accent); }
@@ -57,18 +119,6 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   flex-direction: column;
   align-items: flex-start;
   position: relative;
-}
-.hero::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  width: min(48vw, 580px);
-  height: min(48vw, 580px);
-  right: 1%;
-  top: 16%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgb(76 91 148 / 12%) 0, rgb(50 58 100 / 5%) 42%, transparent 72%);
-  pointer-events: none;
 }
 .eyebrow { margin: 0; font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .11em; text-transform: uppercase; color: var(--accent); }
 .hero h1 { max-width: 850px; margin: 27px 0 24px; font-size: clamp(48px, 7.2vw, 92px); line-height: 1.055; letter-spacing: -.065em; font-weight: 470; }
@@ -106,13 +156,19 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .site-footer small { font-size: 11px; color: var(--quiet); }
 
 @media (max-width: 680px) {
+  .star-field:nth-child(3) { display: none; }
+  .black-hole-art {
+    opacity: .72;
+    background-position: 68% 16%;
+    background-size: auto 72%;
+  }
   .site-header, .section-shell { width: min(100% - 40px, 1200px); }
   .site-header { height: 68px; gap: 18px; }
   .wordmark { font-size: 12px; }
   .site-header nav { gap: clamp(12px, 4vw, 21px); }
   .site-header nav a { font-size: 10px; }
   .hero { min-height: calc(100dvh - 68px); padding-block: 112px 42px; }
-  .hero h1 { margin-top: 22px; font-size: clamp(48px, 13vw, 70px); }
+  .hero h1 { margin-top: 22px; font-size: clamp(42px, 12vw, 58px); letter-spacing: -.055em; }
   .hero-intro { font-size: 16px; }
   .currently { margin-top: 30px; }
   .content-section { padding-block: 86px; }
@@ -125,7 +181,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   .journey-copy { font-size: 16px; }
   .site-footer { align-items: flex-start; flex-direction: column; gap: 8px; }
 }
-@media (max-width: 360px) {
+@media (max-width: 480px) {
   .site-header { width: calc(100% - 28px); gap: 12px; }
   .wordmark { font-size: 11.5px; }
   .site-header nav { gap: 8px; }
