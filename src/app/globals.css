@@ -157,10 +157,11 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .site-header nav a { font-family: var(--font-mono), monospace; color: var(--muted); font-size: 12px; }
 .section-shell { width: min(100% - 96px, 1200px); margin-inline: auto; }
 .hero {
-  min-height: min(824px, calc(100dvh - var(--header-height)));
-  padding-block: clamp(96px, 15vh, 166px) 84px;
+  min-height: calc(100dvh - var(--header-height));
+  padding-block: 40px 96px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
   position: relative;
 }
@@ -180,7 +181,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .email-address { color: var(--text); font-size: 12px; user-select: all; }
 .email-copy { padding: 4px 8px; border: 1px solid var(--line); border-radius: 5px; background: none; font: inherit; font-size: 11px; color: var(--accent); cursor: pointer; }
 .email-copy:hover { border-color: var(--accent); }
-.scroll-cue { margin-top: auto; padding-top: 60px; color: var(--quiet); font-family: var(--font-mono), monospace; font-size: 11px; }
+.scroll-cue { position: absolute; bottom: 36px; left: 0; color: var(--quiet); font-family: var(--font-mono), monospace; font-size: 11px; }
 .scroll-cue span { color: var(--accent); margin-left: 8px; }
 .content-section { padding-block: clamp(100px, 13vw, 170px); border-top: 1px solid var(--line); }
 .section-heading { display: grid; grid-template-columns: minmax(130px, 1fr) 2fr; gap: 32px; align-items: baseline; margin-bottom: 64px; }
@@ -223,7 +224,8 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   .wordmark { font-size: 12px; }
   .site-header nav { gap: clamp(12px, 4vw, 21px); }
   .site-header nav a { font-size: 10px; }
-  .hero { min-height: calc(100dvh - var(--header-height)); padding-block: 112px 42px; }
+  .hero { padding-block: 40px 88px; }
+  .scroll-cue { bottom: 28px; }
   .hero-name { font-size: clamp(30px, 8.5vw, 40px); }
   .hero-tagline { margin-top: 18px; font-size: clamp(42px, 12vw, 58px); letter-spacing: -.055em; }
   .hero-intro { font-size: 16px; }
