@@ -1,74 +1,87 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
+  type MotionValue,
 } from "motion/react";
-import { useMemo, useState } from "react";
-import * as THREE from "three";
+import { useEffect, useRef } from "react";
 import { StarField } from "@/components/experience/star-field";
 
-type SceneProps = {
-  limitedDevice: boolean;
-  progress: { get: () => number };
-};
+// Scroll fractions where each section's top reaches the top of the viewport.
+type SectionStops = { work: number; projects: number };
 
-const smoothstep = (start: number, end: number, value: number) => {
-  const amount = THREE.MathUtils.clamp((value - start) / (end - start), 0, 1);
-  return amount * amount * (3 - 2 * amount);
-};
+const fallbackStops: SectionStops = { work: 0.15, projects: 0.35 };
 
-function Scene({ limitedDevice, progress }: SceneProps) {
-  const { size } = useThree();
-  const lookAt = useMemo(() => new THREE.Vector3(), []);
-  const compact = size.width < 680;
+const farStars: [number, number] = [0.7, 1.3];
+const midStars: [number, number] = [0.9, 1.7];
+const nearStars: [number, number] = [1.2, 2.2];
 
-  useFrame(({ camera }) => {
-    const travel = smoothstep(0, 0.34, progress.get());
-    camera.position.x = THREE.MathUtils.lerp(0, compact ? 0.12 : 0.28, travel);
-    camera.position.y = THREE.MathUtils.lerp(0, -0.12, travel);
-    camera.position.z = THREE.MathUtils.lerp(8, 4.7, travel);
+// Piecewise-linear interpolation, clamped at both ends.
+function interpolate(value: number, input: number[], output: number[]) {
+  if (value <= input[0]) return output[0];
 
-    lookAt.set(
-      THREE.MathUtils.lerp(0.2, compact ? 0.48 : 0.95, travel),
-      THREE.MathUtils.lerp(0, -0.2, travel),
-      -1.6,
-    );
-    camera.lookAt(lookAt);
+  for (let index = 1; index < input.length; index += 1) {
+    if (value <= input[index]) {
+      const span = input[index] - input[index - 1];
+      const amount = span > 0 ? (value - input[index - 1]) / span : 1;
+      return output[index - 1] + (output[index] - output[index - 1]) * amount;
+    }
+  }
+
+  return output[output.length - 1];
+}
+
+function useSectionStops() {
+  const stops = useRef<SectionStops>(fallbackStops);
+
+  useEffect(() => {
+    const measure = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const top = (id: string) => {
+        const element = document.getElementById(id);
+        if (!element || scrollable <= 0) return null;
+        return (element.getBoundingClientRect().top + window.scrollY) / scrollable;
+      };
+
+      const work = top("work");
+      const projects = top("projects");
+      if (work !== null && projects !== null && projects > work) {
+        stops.current = { work, projects };
+      }
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(document.body);
+    window.addEventListener("resize", measure);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  return stops;
+}
+
+function useJourney(
+  progress: MotionValue<number>,
+  stops: { current: SectionStops },
+  output: (stops: SectionStops) => [number[], number[]],
+) {
+  return useTransform(progress, (value) => {
+    const [input, result] = output(stops.current);
+    return interpolate(value, input, result);
   });
-
-  return (
-    <StarField
-      count={limitedDevice ? (compact ? 70 : 120) : compact ? 130 : 260}
-      progress={progress}
-    />
-  );
 }
 
 export function SpaceExperience() {
   const reduceMotion = useReducedMotion();
-  const [capabilities] = useState(() => {
-    try {
-      const canvas = document.createElement("canvas");
-      const webgl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-
-      return {
-        compactViewport: window.matchMedia("(max-width: 680px)").matches,
-        limitedDevice: navigator.hardwareConcurrency <= 4,
-        webglAvailable: Boolean(webgl),
-      };
-    } catch {
-      return {
-        compactViewport: true,
-        limitedDevice: true,
-        webglAvailable: false,
-      };
-    }
-  });
+  const stops = useSectionStops();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
     stiffness: 62,
@@ -76,44 +89,52 @@ export function SpaceExperience() {
     mass: 0.32,
     restDelta: 0.0005,
   });
-  const imageScale = useTransform(
-    progress,
-    [0, 0.34],
-    capabilities.compactViewport ? [1, 1.28] : [1, 1.6],
-  );
-  const imageX = useTransform(
-    progress,
-    [0, 0.34],
-    capabilities.compactViewport ? ["1%", "-1%"] : ["6%", "-3%"],
-  );
-  const imageY = useTransform(progress, [0, 0.34], ["0%", "4%"]);
 
-  if (reduceMotion || !capabilities.webglAvailable) {
-    return (
-      <div className="space-experience" aria-hidden="true">
-        <div className="black-hole-art" />
-      </div>
-    );
+  // Hero → Work: the camera approaches the black hole.
+  // Work → Projects: it keeps growing into an abstract horizon while stars take over.
+  const holeScale = useJourney(progress, stops, ({ work, projects }) => [
+    [0, work, projects],
+    [1, 1.6, 2.5],
+  ]);
+  const holeX = useJourney(progress, stops, ({ work }) => [[0, work], [6, -3]]);
+  const holeY = useJourney(progress, stops, ({ work }) => [[0, work], [0, 4]]);
+  const holeOpacity = useJourney(progress, stops, ({ work, projects }) => [
+    [work + (projects - work) * 0.35, projects],
+    [1, 0],
+  ]);
+  const glowOpacity = useJourney(progress, stops, ({ work, projects }) => [
+    [work, projects, projects + (1 - projects) * 0.4],
+    [0, 0.55, 0.3],
+  ]);
+  const starOpacity = useJourney(progress, stops, ({ work, projects }) => [
+    [0, work, projects],
+    [0.35, 0.45, 1],
+  ]);
+  const farScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.08, 1.2]]);
+  const midScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.22, 1.5]]);
+  const nearScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.55, 2.3]]);
+
+  const holeTranslateX = useTransform(holeX, (value) => `${value}%`);
+  const holeTranslateY = useTransform(holeY, (value) => `${value}%`);
+
+  if (reduceMotion) {
+    return <div className="space-fallback" aria-hidden="true" />;
   }
 
   return (
     <div className="space-experience" aria-hidden="true">
       <motion.div
-        className="black-hole-art"
-        style={{ scale: imageScale, x: imageX, y: imageY }}
-      />
-      <Canvas
-        camera={{ position: [0, 0, 8], fov: 45, near: 0.1, far: 80 }}
-        dpr={capabilities.limitedDevice ? 1 : [1, 1.5]}
-        fallback={<div className="space-fallback" />}
-        gl={{
-          alpha: true,
-          antialias: true,
-          powerPreference: "high-performance",
-        }}
+        className="black-hole"
+        style={{ scale: holeScale, x: holeTranslateX, y: holeTranslateY, opacity: holeOpacity }}
       >
-        <Scene limitedDevice={capabilities.limitedDevice} progress={progress} />
-      </Canvas>
+        <div className="black-hole-art" />
+      </motion.div>
+      <motion.div className="deep-space-glow" style={{ opacity: glowOpacity }} />
+      <div className="star-layers">
+        <StarField count={70} seed={1} radius={farStars} scale={farScale} opacity={starOpacity} />
+        <StarField count={40} seed={2} radius={midStars} scale={midScale} opacity={starOpacity} />
+        <StarField count={18} seed={3} radius={nearStars} scale={nearScale} opacity={starOpacity} />
+      </div>
     </div>
   );
 }

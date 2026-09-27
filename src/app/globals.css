@@ -40,19 +40,40 @@ body {
   z-index: 0;
   pointer-events: none;
 }
-.black-hole-art {
+.black-hole {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url("/images/black-hole-hero.jpg") center / cover no-repeat;
   transform-origin: 73% 48%;
-  will-change: transform;
+  will-change: transform, opacity;
 }
-.space-experience canvas {
-  position: absolute !important;
+.black-hole-art {
+  position: absolute;
+  inset: 0;
+  background: url("/images/black-hole-hero.jpg") center / cover no-repeat;
+}
+.deep-space-glow {
+  position: absolute;
   inset: 0;
   z-index: 1;
-  display: block;
+  background:
+    radial-gradient(ellipse 42% 34% at 70% 42%, rgb(96 104 176 / 22%), transparent 70%),
+    radial-gradient(ellipse 22% 18% at 22% 78%, rgb(217 183 137 / 7%), transparent 70%);
+  will-change: opacity;
+}
+.star-layers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.star-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #c6d1f5;
+  transform-origin: 72% 46%;
+  will-change: transform, opacity;
 }
 .space-experience::after {
   content: "";
@@ -135,6 +156,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .site-footer small { font-size: 11px; color: var(--quiet); }
 
 @media (max-width: 680px) {
+  .star-field:nth-child(3) { display: none; }
   .black-hole-art {
     opacity: .72;
     background-position: 68% 16%;
@@ -167,5 +189,4 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .black-hole-art { will-change: auto; }
 }
