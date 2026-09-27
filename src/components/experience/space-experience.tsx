@@ -124,16 +124,16 @@ export function SpaceExperience() {
     [0, 1],
   ]);
   const orbitAngle = useTransform(orbit, (amount) => Math.PI * (1 - Math.cos(Math.PI * amount)) / 2);
-  const holeX = useTransform(orbitAngle, (angle) => `${(Math.cos(angle) - 1) * 30}vw`);
+  const holeX = useTransform(orbitAngle, (angle) => `${(Math.cos(angle) - 1) * 32}vw`);
   const holeY = useTransform(orbitAngle, (angle) => `${-Math.sin(angle) * 14}vh`);
   const holeRotate = useTransform(orbitAngle, (angle) => (angle / Math.PI) * -10);
   // The glow thins out as it spreads, so the Projects copy never sits on bright light.
-  // Full brightness until the swing is three quarters done (135° round the arc), so the
-  // artwork is seen at its best before it dims into Work.
+  // Full brightness until the shadow has landed and the zoom has brought the bright jet
+  // on the upper right of the ring into view, then the same fade as before.
   const holeOpacity = useJourney(progress, stops, ({ work, projects }) => {
     const landed = work + (projects - work) * 0.1;
     return [
-      [landed * (2 / 3), landed, work + (projects - work) * 0.45, projects],
+      [landed, work + (projects - work) * 0.3, work + (projects - work) * 0.55, projects],
       [1, 0.6, 0.35, 0],
     ];
   });

@@ -41,8 +41,10 @@ body {
 .space-experience {
   --art-w: max(100vw, calc(100dvh * 1.7768));
   --art-h: calc(var(--art-w) / 1.7768);
-  --art-left: calc((100vw - var(--art-w)) * .5);
-  --art-top: calc((100dvh - var(--art-h)) * .5);
+  /* Shift the art so the shadow sits a little right of the headline and centred
+     vertically in the space below the fixed header. */
+  --art-left: calc((100vw - var(--art-w)) * .5 + 5vw);
+  --art-top: calc((100dvh - var(--art-h)) * .5 + var(--header-height) / 2 + var(--art-h) * .043);
   --hole-x: calc(var(--art-left) + var(--art-w) * .744);
   --hole-y: calc(var(--art-top) + var(--art-h) * .457);
 }
