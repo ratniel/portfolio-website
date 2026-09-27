@@ -17,16 +17,19 @@ export const siteContent = {
     { label: "notes", href: "#notes" },
   ],
   hero: {
-    eyebrow: "AI engineer · lifelong learner",
+    eyebrow: "AI engineer",
     heading: {
       beforeAccent: "Trying to understand AI, one ",
       accent: "rabbit hole",
       afterAccent: " at a time.",
     },
     introduction:
-      "I build things to answer questions I can’t stop thinking about. Each project is a way to get closer to understanding how these systems work—and what they can make possible.",
-    prompt: "Currently exploring",
-    exploration: "How to make AI systems more useful, reliable, and human.",
+      "I started in electronics engineering, got pulled in by neural networks, and have spent the last two and a half years putting LLMs into production. I build things to answer the questions I can’t stop thinking about.",
+    links: [
+      { label: "github", href: "https://github.com/ratniel" },
+      { label: "linkedin", href: "https://www.linkedin.com/in/ratniel" },
+    ],
+    email: { label: "email", address: "ratniel.kokane1729@gmail.com", copy: "copy", copied: "copied" },
     scrollCue: "Scroll to explore",
   },
   journey: {
@@ -45,7 +48,7 @@ export const siteContent = {
   name: string;
   metadata: { title: string; description: string };
   navigation: { label: string; href: string }[];
-  hero: { eyebrow: string; heading: { beforeAccent: string; accent: string; afterAccent: string }; introduction: string; prompt: string; exploration: string; scrollCue: string };
+  hero: { eyebrow: string; heading: { beforeAccent: string; accent: string; afterAccent: string }; introduction: string; links: { label: string; href: string }[]; email: { label: string; address: string; copy: string; copied: string }; scrollCue: string };
   sections: { work: { eyebrow: string; title: string; empty: string }; projects: { eyebrow: string; title: string }; journey: { eyebrow: string }; notes: { eyebrow: string } };
   journey: { heading: string; body: string };
   notes: { heading: string; empty: string };

@@ -23,7 +23,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Project structure
 
 - `src/app/` — App Router page, layout, and global styles
-- `src/components/` — navigation, homepage sections, and the isolated visual experience
+- `src/components/` — navigation, the scroll progress line, the hero email popover, homepage sections, and the isolated visual experience
 - `src/content/` — editable site, work, and project content
 
 Update user-facing copy in `src/content/`. The homepage is composed in `src/app/page.tsx`.
