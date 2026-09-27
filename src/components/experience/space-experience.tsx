@@ -115,15 +115,17 @@ export function SpaceExperience() {
   const approachEnd = ({ work, projects }: SectionStops) => work + (projects - work) * 0.75;
   const approach = useJourney(progress, stops, (current) => [[0, approachEnd(current)], [0, 1]]);
   const holeScale = useTransform(approach, (amount) => apparentShadowSize(distanceAt(amount)));
-  // While the hero scrolls away, the fall bends left so the shadow settles behind Work's
-  // empty label column instead of under the copy. Smoothstep keeps both ends of the drift soft.
-  const drift = useJourney(progress, stops, ({ work, projects }) => [
-    [work * 0.35, work + (projects - work) * 0.05],
+  // From the first scroll the shadow also swings anticlockwise along an arc (up, then
+  // left), so it settles behind Work's empty label column instead of under the copy.
+  // The swing starts with the zoom and eases in and out, so neither end is abrupt.
+  const orbit = useJourney(progress, stops, ({ work, projects }) => [
+    [0, work + (projects - work) * 0.1],
     [0, 1],
   ]);
-  const holeX = useTransform(drift, (amount) => `${amount * amount * (3 - 2 * amount) * -60}vw`);
-  const holeY = useTransform(approach, (amount) => `${amount * -6}vh`);
-  const holeRotate = useTransform(approach, (amount) => amount * 6);
+  const orbitAngle = useTransform(orbit, (amount) => Math.PI * (1 - Math.cos(Math.PI * amount)) / 2);
+  const holeX = useTransform(orbitAngle, (angle) => `${(Math.cos(angle) - 1) * 30}vw`);
+  const holeY = useTransform(orbitAngle, (angle) => `${-Math.sin(angle) * 14}vh`);
+  const holeRotate = useTransform(orbitAngle, (angle) => (angle / Math.PI) * -10);
   // The glow thins out as it spreads, so the Projects copy never sits on bright light.
   const holeOpacity = useJourney(progress, stops, ({ work, projects }) => [
     [work * 0.4, work, work + (projects - work) * 0.45, projects],
