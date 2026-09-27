@@ -6,7 +6,7 @@ export const siteContent = {
   },
   sections: {
     work: { eyebrow: "01 / practice", title: "Work", empty: "Work details will be added here." },
-    projects: { eyebrow: "02 / investigation", title: "Things I’m figuring out" },
+    projects: { eyebrow: "02 / investigation", title: "Things I’m figuring out", codeLabel: "github" },
     journey: { eyebrow: "03 / the turning point" },
     notes: { eyebrow: "04 / in words" },
   },
@@ -49,7 +49,7 @@ export const siteContent = {
   metadata: { title: string; description: string };
   navigation: { label: string; href: string }[];
   hero: { eyebrow: string; heading: { beforeAccent: string; accent: string; afterAccent: string }; introduction: string; links: { label: string; href: string }[]; email: { label: string; address: string; copy: string; copied: string }; scrollCue: string };
-  sections: { work: { eyebrow: string; title: string; empty: string }; projects: { eyebrow: string; title: string }; journey: { eyebrow: string }; notes: { eyebrow: string } };
+  sections: { work: { eyebrow: string; title: string; empty: string }; projects: { eyebrow: string; title: string; codeLabel: string }; journey: { eyebrow: string }; notes: { eyebrow: string } };
   journey: { heading: string; body: string };
   notes: { heading: string; empty: string };
   footer: { note: string; copyright: string };
