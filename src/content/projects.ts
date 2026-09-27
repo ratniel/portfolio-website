@@ -1,13 +1,20 @@
 export type Project = {
   name: string;
-  question: string;
-  description: string;
-  learning: string;
+  why: string;
+  built: string;
+  github?: string;
 };
 
-// Project names are known; descriptions are intentionally left for verified copy.
 export const projects: Project[] = [
-  { name: "JurisAI", question: "A project in progress.", description: "More about what I’m building here soon.", learning: "" },
-  { name: "Kotaeba", question: "A project in progress.", description: "More about what I’m building here soon.", learning: "" },
-  { name: "Visage", question: "A project in progress.", description: "More about what I’m building here soon.", learning: "" },
+  {
+    name: "JurisAI",
+    why: "There are well over a thousand government schemes, and finding the ones that apply to you means reading a lot of dense text. I wanted to see whether an agent could do that reading for you.",
+    built: "An assistant over 1,196 schemes that works out what you’re asking, plans one to three searches, and answers from the scheme text itself.",
+  },
+  {
+    name: "Kotaeba",
+    why: "I wanted dictation on my Mac that never sends my voice to a server.",
+    built: "A menu bar app: hold a hotkey, speak, and the text lands in whatever app you’re typing in. Transcription runs locally with Parakeet or Whisper on Apple’s MLX.",
+    github: "https://github.com/ratniel/kotaeba",
+  },
 ];
