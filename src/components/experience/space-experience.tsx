@@ -23,7 +23,7 @@ const nearStars: [number, number] = [1.2, 2.2];
 
 // Distances in Schwarzschild radii for the start and end of the approach.
 const startDistance = 10;
-const endDistance = 2.4;
+const endDistance = 3;
 
 // Angular radius of a Schwarzschild black hole's shadow for a static observer at r:
 // sin(a) = (3√3 / 2) · (rs / r) · √(1 − rs / r)
@@ -109,23 +109,19 @@ export function SpaceExperience() {
     restDelta: 0.0005,
   });
 
-  // Hero → Work → Projects: an angled fall toward the black hole. The shadow grows
-  // faster than the disk art and starlight piles up at its edge, until darkness
-  // fills the view and gives way to deep space.
+  // Hero → Work → Projects: an angled fall toward the black hole. The artwork grows
+  // with the shadow's apparent size, its glow spreads outward and thins, and the
+  // darkness gives way to deep space.
   const approachEnd = ({ work, projects }: SectionStops) => work + (projects - work) * 0.75;
   const approach = useJourney(progress, stops, (current) => [[0, approachEnd(current)], [0, 1]]);
-  const shadowScale = useTransform(approach, (amount) => apparentShadowSize(distanceAt(amount)));
-  const artScale = useTransform(shadowScale, (scale) => scale ** 0.4);
+  const holeScale = useTransform(approach, (amount) => apparentShadowSize(distanceAt(amount)));
   const holeX = useTransform(approach, (amount) => `${amount * 12}vw`);
   const holeY = useTransform(approach, (amount) => `${amount * -6}vh`);
   const holeRotate = useTransform(approach, (amount) => amount * -6);
-  // The ring brightens as light piles up, then dims once its edge sweeps behind the text.
-  const ringOpacity = useTransform(approach, (amount) =>
-    interpolate(amount, [0, 0.35, 0.72, 1], [0, 0.2, 0.75, 0.22]),
-  );
+  // The glow thins out as it spreads, so the Projects copy never sits on bright light.
   const holeOpacity = useJourney(progress, stops, ({ work, projects }) => [
-    [work + (projects - work) * 0.6, projects],
-    [1, 0],
+    [work - (projects - work) * 0.2, work + (projects - work) * 0.45, projects],
+    [1, 0.45, 0],
   ]);
   const glowOpacity = useJourney(progress, stops, ({ work, projects }) => [
     [work, projects, projects + (1 - projects) * 0.4],
@@ -146,9 +142,8 @@ export function SpaceExperience() {
   return (
     <div className="space-experience" aria-hidden="true">
       <BlackHole
-        artScale={artScale}
-        shadowScale={shadowScale}
-        ringOpacity={ringOpacity}
+        scale={holeScale}
+        spread={approach}
         x={holeX}
         y={holeY}
         rotate={holeRotate}
