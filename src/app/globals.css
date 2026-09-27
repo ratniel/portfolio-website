@@ -3,20 +3,16 @@
 :root {
   color-scheme: dark;
   --surface: #0b0d12;
-  --surface-raised: #11141b;
   --text: #f0f1f4;
   --muted: #9ba2b1;
   --quiet: #7d8798;
   --line: #252a35;
   --accent: #a8b9f4;
   --accent-warm: #d9b789;
-  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @theme inline {
-  --color-background: var(--surface);
-  --color-foreground: var(--text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -151,8 +147,6 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .notes-section .section-heading { margin-bottom: 25px; }
 .site-footer { border-top: 1px solid var(--line); padding-block: 32px 40px; display: flex; justify-content: space-between; align-items: baseline; gap: 24px; color: var(--muted); font-size: 13px; }
 .site-footer p { margin: 0; }
-.site-footer a { color: var(--text); }
-.site-footer a span { color: var(--accent); }
 .site-footer small { font-size: 11px; color: var(--quiet); }
 
 @media (max-width: 680px) {
