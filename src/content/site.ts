@@ -24,12 +24,12 @@ export const siteContent = {
       afterAccent: " at a time.",
     },
     introduction:
-      "I build things to answer questions I can’t stop thinking about: an LLM pipeline that reads 10,000+ news articles a day, an agent that searches over a thousand government schemes, and speech-to-text that runs entirely on my Mac.",
+      "I started in electronics engineering, got pulled in by neural networks, and have spent the last two and a half years putting LLMs into production. I build things to answer the questions I can’t stop thinking about.",
     links: [
       { label: "github", href: "https://github.com/ratniel" },
       { label: "linkedin", href: "https://www.linkedin.com/in/ratniel" },
-      { label: "email", href: "mailto:ratniel.kokane1729@gmail.com" },
     ],
+    email: { label: "email", address: "ratniel.kokane1729@gmail.com", copy: "copy", copied: "copied" },
     scrollCue: "Scroll to explore",
   },
   journey: {
@@ -48,7 +48,7 @@ export const siteContent = {
   name: string;
   metadata: { title: string; description: string };
   navigation: { label: string; href: string }[];
-  hero: { eyebrow: string; heading: { beforeAccent: string; accent: string; afterAccent: string }; introduction: string; links: { label: string; href: string }[]; scrollCue: string };
+  hero: { eyebrow: string; heading: { beforeAccent: string; accent: string; afterAccent: string }; introduction: string; links: { label: string; href: string }[]; email: { label: string; address: string; copy: string; copied: string }; scrollCue: string };
   sections: { work: { eyebrow: string; title: string; empty: string }; projects: { eyebrow: string; title: string }; journey: { eyebrow: string }; notes: { eyebrow: string } };
   journey: { heading: string; body: string };
   notes: { heading: string; empty: string };

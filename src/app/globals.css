@@ -139,9 +139,17 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .hero-tagline { max-width: 850px; margin: 22px 0 24px; font-size: clamp(48px, 7.2vw, 92px); line-height: 1.055; letter-spacing: -.065em; font-weight: 470; }
 .hero-accent { color: var(--accent-warm); }
 .hero-intro { max-width: 575px; margin: 0; color: #b7bdc9; font-size: clamp(16px, 1.45vw, 19px); line-height: 1.75; }
-.hero-links { display: flex; gap: 28px; margin: 34px 0 0; padding: 0; list-style: none; font-family: var(--font-mono), monospace; font-size: 12px; }
+.hero-links { position: relative; display: flex; gap: 28px; margin: 34px 0 0; padding: 0; list-style: none; font-family: var(--font-mono), monospace; font-size: 12px; }
 .hero-links a { color: var(--muted); }
 .hero-links a:hover, .hero-links a:focus-visible { color: var(--text); }
+.email-popover { position: static; }
+.email-trigger { padding: 0; border: 0; background: none; font: inherit; color: var(--muted); cursor: pointer; }
+.email-trigger:hover, .email-trigger[aria-expanded="true"] { color: var(--text); }
+.email-trigger:focus-visible, .email-copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+.email-panel { position: absolute; top: calc(100% + 12px); left: 0; z-index: 10; display: flex; align-items: center; gap: 16px; padding: 10px 12px 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: rgb(11 13 18 / .92); backdrop-filter: blur(8px); white-space: nowrap; }
+.email-address { color: var(--text); font-size: 12px; user-select: all; }
+.email-copy { padding: 4px 8px; border: 1px solid var(--line); border-radius: 5px; background: none; font: inherit; font-size: 11px; color: var(--accent); cursor: pointer; }
+.email-copy:hover { border-color: var(--accent); }
 .scroll-cue { margin-top: auto; padding-top: 60px; color: var(--quiet); font-family: var(--font-mono), monospace; font-size: 11px; }
 .scroll-cue span { color: var(--accent); margin-left: 8px; }
 .content-section { padding-block: clamp(100px, 13vw, 170px); border-top: 1px solid var(--line); }
