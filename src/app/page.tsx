@@ -15,7 +15,7 @@ export default function Home() {
     <ExperienceLayer />
     <Navigation items={siteContent.navigation} name={siteContent.name} />
     <main id="top">
-      <Hero {...siteContent.hero} />
+      <Hero name={siteContent.name} {...siteContent.hero} />
       <Work entries={workEntries} {...siteContent.sections.work} />
       <Projects projects={projects} {...siteContent.sections.projects} />
       <Journey {...siteContent.sections.journey} {...siteContent.journey} />
