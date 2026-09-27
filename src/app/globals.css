@@ -138,7 +138,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   position: fixed;
   top: calc(var(--header-height) + 36px);
   bottom: 44px;
-  right: clamp(14px, calc((100vw - 1200px) / 4), 72px);
+  left: clamp(14px, calc((100vw - 1200px) / 4), 72px);
   z-index: 15;
   width: 7px;
   pointer-events: none;
@@ -221,7 +221,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   .site-header, .section-shell { width: min(100% - 40px, 1200px); }
   html { --header-height: 68px; }
   .site-header { gap: 18px; }
-  .scroll-progress { right: 6px; top: calc(var(--header-height) + 24px); bottom: 28px; opacity: .7; }
+  .scroll-progress { left: 6px; top: calc(var(--header-height) + 24px); bottom: 28px; opacity: .7; }
   .wordmark { font-size: 12px; }
   .site-header nav { gap: clamp(12px, 4vw, 21px); }
   .site-header nav a { font-size: 10px; }

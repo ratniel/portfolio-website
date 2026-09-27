@@ -115,13 +115,19 @@ export function SpaceExperience() {
   const approachEnd = ({ work, projects }: SectionStops) => work + (projects - work) * 0.75;
   const approach = useJourney(progress, stops, (current) => [[0, approachEnd(current)], [0, 1]]);
   const holeScale = useTransform(approach, (amount) => apparentShadowSize(distanceAt(amount)));
-  const holeX = useTransform(approach, (amount) => `${amount * 12}vw`);
+  // While the hero scrolls away, the fall bends left so the shadow settles behind Work's
+  // empty label column instead of under the copy. Smoothstep keeps both ends of the drift soft.
+  const drift = useJourney(progress, stops, ({ work, projects }) => [
+    [work * 0.35, work + (projects - work) * 0.05],
+    [0, 1],
+  ]);
+  const holeX = useTransform(drift, (amount) => `${amount * amount * (3 - 2 * amount) * -60}vw`);
   const holeY = useTransform(approach, (amount) => `${amount * -6}vh`);
-  const holeRotate = useTransform(approach, (amount) => amount * -6);
+  const holeRotate = useTransform(approach, (amount) => amount * 6);
   // The glow thins out as it spreads, so the Projects copy never sits on bright light.
   const holeOpacity = useJourney(progress, stops, ({ work, projects }) => [
-    [work - (projects - work) * 0.2, work + (projects - work) * 0.45, projects],
-    [1, 0.45, 0],
+    [work * 0.4, work, work + (projects - work) * 0.45, projects],
+    [1, 0.6, 0.35, 0],
   ]);
   const glowOpacity = useJourney(progress, stops, ({ work, projects }) => [
     [work, projects, projects + (1 - projects) * 0.4],
