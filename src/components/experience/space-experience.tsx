@@ -150,10 +150,20 @@ export function SpaceExperience() {
   const lensing = useMotionValue(1);
   const art = useRef<HTMLDivElement>(null);
   // In the hero, leave the stars around the black hole's glow alone.
+  // Measured once per frame and shared by the three star layers, so they don't each force a
+  // layout read between one another's writes.
+  const avoidCache = useRef<{ time: number; area: AvoidArea | null }>({ time: -1, area: null });
   const avoidHole = useCallback((): AvoidArea | null => {
-    if (!art.current || holeOpacity.get() < 0.05) return null;
-    const box = art.current.getBoundingClientRect();
-    return { x: box.left + box.width * 0.744, y: box.top + box.height * 0.457, radius: box.width * 0.24 };
+    const time = document.timeline.currentTime;
+    const now = typeof time === "number" ? time : performance.now();
+    if (avoidCache.current.time === now) return avoidCache.current.area;
+    let area: AvoidArea | null = null;
+    if (art.current && holeOpacity.get() >= 0.05) {
+      const box = art.current.getBoundingClientRect();
+      area = { x: box.left + box.width * 0.744, y: box.top + box.height * 0.457, radius: box.width * 0.24 };
+    }
+    avoidCache.current = { time: now, area };
+    return area;
   }, [holeOpacity]);
   const farScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.08, 1.2]]);
   const midScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.22, 1.5]]);
