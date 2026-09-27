@@ -5,6 +5,7 @@ import {
   useReducedMotion,
   useScroll,
   useSpring,
+  useMotionValue,
   useTransform,
   type MotionValue,
 } from "motion/react";
@@ -115,14 +116,27 @@ export function SpaceExperience() {
   const approachEnd = ({ work, projects }: SectionStops) => work + (projects - work) * 0.75;
   const approach = useJourney(progress, stops, (current) => [[0, approachEnd(current)], [0, 1]]);
   const holeScale = useTransform(approach, (amount) => apparentShadowSize(distanceAt(amount)));
-  const holeX = useTransform(approach, (amount) => `${amount * 12}vw`);
-  const holeY = useTransform(approach, (amount) => `${amount * -6}vh`);
-  const holeRotate = useTransform(approach, (amount) => amount * -6);
-  // The glow thins out as it spreads, so the Projects copy never sits on bright light.
-  const holeOpacity = useJourney(progress, stops, ({ work, projects }) => [
-    [work - (projects - work) * 0.2, work + (projects - work) * 0.45, projects],
-    [1, 0.45, 0],
+  // From the first scroll the shadow also swings anticlockwise along an arc (up, then
+  // left), so it settles behind Work's empty label column instead of under the copy.
+  // The swing starts with the zoom and eases in and out, so neither end is abrupt.
+  const orbit = useJourney(progress, stops, ({ work, projects }) => [
+    [0, work + (projects - work) * 0.1], // keep in step with `landed` below
+    [0, 1],
   ]);
+  const orbitAngle = useTransform(orbit, (amount) => Math.PI * (1 - Math.cos(Math.PI * amount)) / 2);
+  const holeX = useTransform(orbitAngle, (angle) => `${(Math.cos(angle) - 1) * 32}vw`);
+  const holeY = useTransform(orbitAngle, (angle) => `${-Math.sin(angle) * 14}vh`);
+  const holeRotate = useTransform(orbitAngle, (angle) => (angle / Math.PI) * -10);
+  // The glow thins out as it spreads, so the Projects copy never sits on bright light.
+  // Full brightness until the shadow has landed and the zoom has brought the bright jet
+  // on the upper right of the ring into view, then the same fade as before.
+  const holeOpacity = useJourney(progress, stops, ({ work, projects }) => {
+    const landed = work + (projects - work) * 0.1;
+    return [
+      [landed, work + (projects - work) * 0.3, work + (projects - work) * 0.55, projects],
+      [1, 0.6, 0.35, 0],
+    ];
+  });
   const glowOpacity = useJourney(progress, stops, ({ work, projects }) => [
     [work, projects, projects + (1 - projects) * 0.4],
     [0, 0.55, 0.3],
@@ -131,17 +145,25 @@ export function SpaceExperience() {
     [0, work, projects],
     [0.35, 0.3, 1],
   ]);
-  // Stars react to the cursor in the hero and again once only deep space is left.
-  const lensing = useJourney(progress, stops, ({ work, projects }) => [
-    [work * 0.25, work * 0.5, projects, projects + (1 - projects) * 0.05],
-    [1, 0, 0, 1],
-  ]);
+  // Stars react to the cursor throughout; the area around the black hole is left alone
+  // (see avoidHole), so the stars it uncovers on its way left respond straight away.
+  const lensing = useMotionValue(1);
   const art = useRef<HTMLDivElement>(null);
   // In the hero, leave the stars around the black hole's glow alone.
+  // Measured once per frame and shared by the three star layers, so they don't each force a
+  // layout read between one another's writes.
+  const avoidCache = useRef<{ time: number; area: AvoidArea | null }>({ time: -1, area: null });
   const avoidHole = useCallback((): AvoidArea | null => {
-    if (!art.current || holeOpacity.get() < 0.05) return null;
-    const box = art.current.getBoundingClientRect();
-    return { x: box.left + box.width * 0.744, y: box.top + box.height * 0.457, radius: box.width * 0.24 };
+    const time = document.timeline.currentTime;
+    const now = typeof time === "number" ? time : performance.now();
+    if (avoidCache.current.time === now) return avoidCache.current.area;
+    let area: AvoidArea | null = null;
+    if (art.current && holeOpacity.get() >= 0.05) {
+      const box = art.current.getBoundingClientRect();
+      area = { x: box.left + box.width * 0.744, y: box.top + box.height * 0.457, radius: box.width * 0.24 };
+    }
+    avoidCache.current = { time: now, area };
+    return area;
   }, [holeOpacity]);
   const farScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.08, 1.2]]);
   const midScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.22, 1.5]]);

@@ -6,7 +6,7 @@ export const siteContent = {
   },
   sections: {
     work: { eyebrow: "01 / practice", title: "Work", empty: "Work details will be added here." },
-    projects: { eyebrow: "02 / investigation", title: "Things I’m figuring out" },
+    projects: { eyebrow: "02 / investigation", title: "Things I’m figuring out", codeLabel: "github" },
     journey: { eyebrow: "03 / the turning point" },
     notes: { eyebrow: "04 / in words" },
   },
@@ -34,7 +34,20 @@ export const siteContent = {
   },
   journey: {
     heading: "A change in direction",
-    body: "I started in electronics engineering. Discovering neural networks changed the questions I wanted to spend my time on, and set me on a path toward building with AI.",
+    stops: [
+      {
+        place: "MANIT Bhopal",
+        detail: "B.Tech, Electronics & Communication",
+        dates: "2019 – 2023",
+        body: "I started in electronics engineering, and somewhere along the way I found neural networks. The idea that we could build machines that think a little like we do really caught hold of me, and it changed the questions I wanted to spend my time on.",
+      },
+      {
+        place: "C-DAC ACTS, Pune",
+        detail: "PG Diploma in Artificial Intelligence",
+        dates: "2023 – 2024",
+        body: "This is where I fell in love with software development, and with the feeling that almost anything is possible if you can write the code for it. It’s also where I met some really cool friends who helped shape how I think about all of this.",
+      },
+    ],
   },
   notes: {
     heading: "Notes from the rabbit holes",
@@ -49,8 +62,8 @@ export const siteContent = {
   metadata: { title: string; description: string };
   navigation: { label: string; href: string }[];
   hero: { eyebrow: string; heading: { beforeAccent: string; accent: string; afterAccent: string }; introduction: string; links: { label: string; href: string }[]; email: { label: string; address: string; copy: string; copied: string }; scrollCue: string };
-  sections: { work: { eyebrow: string; title: string; empty: string }; projects: { eyebrow: string; title: string }; journey: { eyebrow: string }; notes: { eyebrow: string } };
-  journey: { heading: string; body: string };
+  sections: { work: { eyebrow: string; title: string; empty: string }; projects: { eyebrow: string; title: string; codeLabel: string }; journey: { eyebrow: string }; notes: { eyebrow: string } };
+  journey: { heading: string; stops: { place: string; detail: string; dates: string; body: string }[] };
   notes: { heading: string; empty: string };
   footer: { note: string; copyright: string };
 };

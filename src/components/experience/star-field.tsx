@@ -38,6 +38,7 @@ function useStarLensing(
 
     const circles = Array.from(element.querySelectorAll("circle"));
     const offsets = stars.map(() => ({ x: 0, y: 0 }));
+    const written = stars.map(() => "");
     let pointer: { x: number; y: number } | null = null;
     let frame = 0;
 
@@ -73,7 +74,13 @@ function useStarLensing(
         offset.x += (targetX - offset.x) * 0.12;
         offset.y += (targetY - offset.y) * 0.12;
         if (Math.abs(targetX - offset.x) > 0.01 || Math.abs(targetY - offset.y) > 0.01) settling = true;
-        circles[index].setAttribute("transform", `translate(${offset.x.toFixed(2)} ${offset.y.toFixed(2)})`);
+        // Only touch the DOM when a star actually moves; rewriting all of them every
+        // frame invalidates the SVG while the black hole is animating underneath.
+        const transform = `translate(${offset.x.toFixed(2)} ${offset.y.toFixed(2)})`;
+        if (transform !== written[index]) {
+          written[index] = transform;
+          circles[index].setAttribute("transform", transform);
+        }
       });
 
       if (settling) frame = requestAnimationFrame(tick);
@@ -91,15 +98,19 @@ function useStarLensing(
       pointer = null;
       schedule();
     };
+    // Scrolling moves stars under a resting cursor, but with no cursor there is nothing to do.
+    const scroll = () => {
+      if (pointer) schedule();
+    };
 
     window.addEventListener("pointermove", move, { passive: true });
-    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("scroll", scroll, { passive: true });
     document.documentElement.addEventListener("pointerleave", leave);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", move);
-      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("scroll", scroll);
       document.documentElement.removeEventListener("pointerleave", leave);
     };
   }, [svg, stars, lensing, avoidArea]);
