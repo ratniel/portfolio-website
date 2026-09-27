@@ -150,8 +150,8 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .scroll-progress-track { background: var(--line); }
 .scroll-progress-fill { background: linear-gradient(to bottom, rgb(168 185 244 / .15), rgb(168 185 244 / .7)); transform: scaleY(var(--progress)); transform-origin: top; }
 .scroll-progress-end { position: absolute; left: 1px; width: 5px; height: 5px; border: 1px solid #4c5572; border-radius: 50%; background: var(--surface); }
-.scroll-progress-end:first-child { top: -6px; }
-.scroll-progress-end:last-of-type { bottom: -6px; }
+.scroll-progress-end:first-child { top: -3.5px; }
+.scroll-progress-end:last-of-type { bottom: -3.5px; }
 .scroll-progress-marker { position: absolute; inset: 0; transform: translateY(calc(var(--progress) * 100%)); }
 .scroll-progress-marker::before { content: ""; position: absolute; top: -3.5px; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgb(168 185 244 / .7); }
 .wordmark { white-space: nowrap; font-size: 14px; font-weight: 550; letter-spacing: .02em; }
