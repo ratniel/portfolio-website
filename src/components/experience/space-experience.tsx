@@ -9,6 +9,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import { useEffect, useRef } from "react";
+import { BlackHole } from "@/components/experience/black-hole";
 import { StarField } from "@/components/experience/star-field";
 
 // Scroll fractions where each section's top reaches the top of the viewport.
@@ -19,6 +20,24 @@ const fallbackStops: SectionStops = { work: 0.15, projects: 0.35 };
 const farStars: [number, number] = [0.7, 1.3];
 const midStars: [number, number] = [0.9, 1.7];
 const nearStars: [number, number] = [1.2, 2.2];
+
+// Distances in Schwarzschild radii for the start and end of the approach.
+const startDistance = 10;
+const endDistance = 2.4;
+
+// Angular radius of a Schwarzschild black hole's shadow for a static observer at r:
+// sin(a) = (3√3 / 2) · (rs / r) · √(1 − rs / r)
+function shadowAngle(distance: number) {
+  const sine = ((3 * Math.sqrt(3)) / 2) * (1 / distance) * Math.sqrt(1 - 1 / distance);
+  return Math.asin(Math.min(sine, 1));
+}
+
+const startShadow = Math.tan(shadowAngle(startDistance));
+
+const distanceAt = (amount: number) => startDistance + (endDistance - startDistance) * amount;
+
+// On-screen size of the shadow relative to where the approach starts.
+const apparentShadowSize = (distance: number) => Math.tan(shadowAngle(distance)) / startShadow;
 
 // Piecewise-linear interpolation, clamped at both ends.
 function interpolate(value: number, input: number[], output: number[]) {
@@ -90,16 +109,22 @@ export function SpaceExperience() {
     restDelta: 0.0005,
   });
 
-  // Hero → Work: the camera approaches the black hole.
-  // Work → Projects: it keeps growing into an abstract horizon while stars take over.
-  const holeScale = useJourney(progress, stops, ({ work, projects }) => [
-    [0, work, projects],
-    [1, 1.6, 2.5],
-  ]);
-  const holeX = useJourney(progress, stops, ({ work }) => [[0, work], [6, -3]]);
-  const holeY = useJourney(progress, stops, ({ work }) => [[0, work], [0, 4]]);
+  // Hero → Work → Projects: an angled fall toward the black hole. The shadow grows
+  // faster than the disk art and starlight piles up at its edge, until darkness
+  // fills the view and gives way to deep space.
+  const approachEnd = ({ work, projects }: SectionStops) => work + (projects - work) * 0.75;
+  const approach = useJourney(progress, stops, (current) => [[0, approachEnd(current)], [0, 1]]);
+  const shadowScale = useTransform(approach, (amount) => apparentShadowSize(distanceAt(amount)));
+  const artScale = useTransform(shadowScale, (scale) => scale ** 0.4);
+  const holeX = useTransform(approach, (amount) => `${amount * 12}vw`);
+  const holeY = useTransform(approach, (amount) => `${amount * -6}vh`);
+  const holeRotate = useTransform(approach, (amount) => amount * -6);
+  // The ring brightens as light piles up, then dims once its edge sweeps behind the text.
+  const ringOpacity = useTransform(approach, (amount) =>
+    interpolate(amount, [0, 0.35, 0.72, 1], [0, 0.2, 0.75, 0.22]),
+  );
   const holeOpacity = useJourney(progress, stops, ({ work, projects }) => [
-    [work + (projects - work) * 0.35, projects],
+    [work + (projects - work) * 0.6, projects],
     [1, 0],
   ]);
   const glowOpacity = useJourney(progress, stops, ({ work, projects }) => [
@@ -108,14 +133,11 @@ export function SpaceExperience() {
   ]);
   const starOpacity = useJourney(progress, stops, ({ work, projects }) => [
     [0, work, projects],
-    [0.35, 0.45, 1],
+    [0.35, 0.3, 1],
   ]);
   const farScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.08, 1.2]]);
   const midScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.22, 1.5]]);
   const nearScale = useJourney(progress, stops, ({ projects }) => [[0, projects, 1], [1, 1.55, 2.3]]);
-
-  const holeTranslateX = useTransform(holeX, (value) => `${value}%`);
-  const holeTranslateY = useTransform(holeY, (value) => `${value}%`);
 
   if (reduceMotion) {
     return <div className="space-fallback" aria-hidden="true" />;
@@ -123,12 +145,15 @@ export function SpaceExperience() {
 
   return (
     <div className="space-experience" aria-hidden="true">
-      <motion.div
-        className="black-hole"
-        style={{ scale: holeScale, x: holeTranslateX, y: holeTranslateY, opacity: holeOpacity }}
-      >
-        <div className="black-hole-art" />
-      </motion.div>
+      <BlackHole
+        artScale={artScale}
+        shadowScale={shadowScale}
+        ringOpacity={ringOpacity}
+        x={holeX}
+        y={holeY}
+        rotate={holeRotate}
+        opacity={holeOpacity}
+      />
       <motion.div className="deep-space-glow" style={{ opacity: glowOpacity }} />
       <div className="star-layers">
         <StarField count={70} seed={1} radius={farStars} scale={farScale} opacity={starOpacity} />
