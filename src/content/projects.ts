@@ -17,9 +17,4 @@ export const projects: Project[] = [
     built: "A menu bar app: hold a hotkey, speak, and the text lands in whatever app you’re typing in. Transcription runs locally with Parakeet or Whisper on Apple’s MLX.",
     github: "https://github.com/ratniel/kotaeba",
   },
-  {
-    name: "Visage",
-    why: "Can a model running on a laptop lift handwritten calligraphy cleanly off a photo?",
-    built: "Early days: a local pipeline that segments only the handwriting from a calligraphy image and exports it with a transparent background.",
-  },
 ];
