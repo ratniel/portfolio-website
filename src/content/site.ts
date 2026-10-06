@@ -2,11 +2,11 @@ export const siteContent = {
   name: "Ratniel Kokane",
   metadata: {
     title: "Ratniel Kokane — AI engineer",
-    description: "Trying to understand AI, one rabbit hole at a time.",
+    description: "AI engineer building useful software with LLMs and agents, testing where it breaks, and learning through practice.",
   },
   sections: {
     work: { eyebrow: "01 / practice", title: "Work", empty: "Work details will be added here." },
-    projects: { eyebrow: "02 / investigation", title: "Things I’m figuring out", codeLabel: "github" },
+    projects: { eyebrow: "02 / building", title: "Things I’ve built", codeLabel: "github" },
     journey: { eyebrow: "03 / the turning point" },
     notes: { eyebrow: "04 / in words" },
   },
@@ -19,12 +19,12 @@ export const siteContent = {
   hero: {
     eyebrow: "AI engineer",
     heading: {
-      beforeAccent: "Trying to understand AI, one ",
-      accent: "rabbit hole",
-      afterAccent: " at a time.",
+      beforeAccent: "Building AI that holds up ",
+      accent: "beyond the demo",
+      afterAccent: ".",
     },
     introduction:
-      "I started in electronics engineering, got pulled in by neural networks, and have spent the last two and a half years putting LLMs into production. I build things to answer the questions I can’t stop thinking about.",
+      "I’m an AI engineer working with LLMs, agents, and the software around them. I like turning a promising idea into something useful, then testing where it breaks and making it better. Building is how I learn.",
     links: [
       { label: "github", href: "https://github.com/ratniel" },
       { label: "linkedin", href: "https://www.linkedin.com/in/ratniel" },
@@ -50,11 +50,11 @@ export const siteContent = {
     ],
   },
   notes: {
-    heading: "Notes from the rabbit holes",
+    heading: "Notes on building AI",
     empty: "I’m still finding the shape of this writing space. When there’s something worth sharing, it’ll find a home here.",
   },
   footer: {
-    note: "Made while figuring things out.",
+    note: "Still learning by building.",
     copyright: "© Ratniel Kokane",
   },
 } satisfies {
