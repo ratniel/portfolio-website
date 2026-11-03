@@ -28,7 +28,7 @@ export function ScrollProgress({ items }: ScrollProgressProps) {
 
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
       const headerHeight = document.querySelector(".site-header")?.getBoundingClientRect().height ?? 0;
-      element.querySelectorAll<HTMLSpanElement>("[data-section]").forEach((checkpoint) => {
+      element.querySelectorAll<HTMLAnchorElement>("[data-section]").forEach((checkpoint) => {
         const section = document.getElementById(checkpoint.dataset.section ?? "");
         if (!section) return;
         const top = section.getBoundingClientRect().top + window.scrollY - headerHeight;
@@ -52,12 +52,19 @@ export function ScrollProgress({ items }: ScrollProgressProps) {
   }, [items]);
 
   return (
-    <div className="scroll-progress" ref={ref} aria-hidden="true">
+    <div className="scroll-progress" ref={ref}>
       <span className="scroll-progress-end" />
       <span className="scroll-progress-track" />
       <span className="scroll-progress-fill" />
       {items.map((item) => (
-        <span className="scroll-progress-checkpoint" data-section={item.href.slice(1)} key={item.href} />
+        <a
+          className="scroll-progress-checkpoint"
+          data-section={item.href.slice(1)}
+          href={item.href}
+          aria-label={item.label}
+          title={item.label}
+          key={item.href}
+        />
       ))}
       <span className="scroll-progress-marker" />
       <span className="scroll-progress-end" />
