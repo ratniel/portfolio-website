@@ -3,16 +3,12 @@
 import { motion, type MotionValue } from "motion/react";
 import { useEffect, useMemo, useRef } from "react";
 
-export type AvoidArea = { x: number; y: number; radius: number };
-
 type StarFieldProps = {
   count: number;
   seed: number;
   radius: [number, number];
   scale: MotionValue<number>;
   opacity: MotionValue<number>;
-  lensing: MotionValue<number>;
-  avoidArea: () => AvoidArea | null;
 };
 
 type Star = { x: number; y: number; r: number };
@@ -29,8 +25,6 @@ function seededRandom(seed: number) {
 function useStarLensing(
   svg: { current: SVGSVGElement | null },
   stars: Star[],
-  lensing: MotionValue<number>,
-  avoidArea: () => AvoidArea | null,
 ) {
   useEffect(() => {
     const element = svg.current;
@@ -47,24 +41,20 @@ function useStarLensing(
       const matrix = element.getScreenCTM();
       if (!matrix) return;
 
-      const strength = lensing.get();
-      const avoid = strength > 0.01 ? avoidArea() : null;
       let settling = false;
 
       stars.forEach((star, index) => {
         let targetX = 0;
         let targetY = 0;
 
-        if (pointer && strength > 0.01) {
+        if (pointer) {
           const screenX = matrix.a * star.x + matrix.c * star.y + matrix.e;
           const screenY = matrix.b * star.x + matrix.d * star.y + matrix.f;
           const dx = screenX - pointer.x;
           const dy = screenY - pointer.y;
           const distance = Math.hypot(dx, dy);
-          const avoided = avoid && Math.hypot(screenX - avoid.x, screenY - avoid.y) < avoid.radius;
-
-          if (!avoided && distance > 0.5 && distance < lensRadius) {
-            const push = ((1 - distance / lensRadius) ** 2 * lensPush * strength) / matrix.a;
+          if (distance > 0.5 && distance < lensRadius) {
+            const push = ((1 - distance / lensRadius) ** 2 * lensPush) / matrix.a;
             targetX = (dx / distance) * push;
             targetY = (dy / distance) * push;
           }
@@ -113,10 +103,10 @@ function useStarLensing(
       window.removeEventListener("scroll", scroll);
       document.documentElement.removeEventListener("pointerleave", leave);
     };
-  }, [svg, stars, lensing, avoidArea]);
+  }, [svg, stars]);
 }
 
-export function StarField({ count, seed, radius, scale, opacity, lensing, avoidArea }: StarFieldProps) {
+export function StarField({ count, seed, radius, scale, opacity }: StarFieldProps) {
   const svg = useRef<SVGSVGElement>(null);
   const stars = useMemo(
     () =>
@@ -131,7 +121,7 @@ export function StarField({ count, seed, radius, scale, opacity, lensing, avoidA
     [count, seed, radius],
   );
 
-  useStarLensing(svg, stars, lensing, avoidArea);
+  useStarLensing(svg, stars);
 
   return (
     <motion.svg
