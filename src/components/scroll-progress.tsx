@@ -14,18 +14,14 @@ export function ScrollProgress() {
       ref.current?.style.setProperty("--progress", progress.toFixed(4));
     };
     const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
-    // Pin the line's ends to the hero's first and last lines of text as they sit on first load.
+    // Align the lower endpoint with the hero's scroll cue at its initial position.
     const align = () => {
       const element = ref.current;
-      const start = document.querySelector("[data-progress-start]");
       const end = document.querySelector("[data-progress-end]");
-      if (!element || !start || !end) return;
-      const middle = (target: Element) => {
-        const box = target.getBoundingClientRect();
-        return box.top + window.scrollY + box.height / 2;
-      };
-      element.style.top = `${middle(start)}px`;
-      element.style.bottom = `${Math.max(16, window.innerHeight - middle(end))}px`;
+      if (!element || !end) return;
+      const box = end.getBoundingClientRect();
+      const middle = box.top + window.scrollY + box.height / 2;
+      element.style.bottom = `${Math.max(16, window.innerHeight - middle)}px`;
     };
     const resize = () => { align(); schedule(); };
     align();

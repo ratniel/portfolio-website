@@ -4,7 +4,7 @@ type HeroProps = { name: string; eyebrow: string; heading: { beforeAccent: strin
 export function Hero({ name, eyebrow, heading, introduction, links, email, scrollCue }: HeroProps) {
   return (
     <section className="hero section-shell" aria-labelledby="hero-title">
-      <p className="eyebrow" data-progress-start>{eyebrow}</p>
+      <p className="eyebrow">{eyebrow}</p>
       <h1 id="hero-title" className="hero-name">{name}</h1>
       <p className="hero-tagline">{heading.beforeAccent}<span className="hero-accent">{heading.accent}</span>{heading.afterAccent}</p>
       <p className="hero-intro">{introduction}</p>
