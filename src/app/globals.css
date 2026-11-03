@@ -2,7 +2,7 @@
 
 :root {
   color-scheme: dark;
-  --surface: #0b0d12;
+  --surface: #000000;
   --text: #f0f1f4;
   --muted: #9ba2b1;
   --quiet: #7d8798;
@@ -62,6 +62,10 @@ body {
   width: var(--art-w);
   height: var(--art-h);
   background: url("/images/black-hole-hero.jpg") center / cover no-repeat;
+  mask-image:
+    linear-gradient(to right, transparent, black 12%, black 88%, transparent),
+    linear-gradient(to bottom, transparent, black 16%, black 72%, transparent);
+  mask-composite: intersect;
   transform-origin: 74.4% 45.7%;
   will-change: transform;
 }
@@ -96,11 +100,11 @@ body {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: linear-gradient(90deg, rgb(11 13 18 / 94%) 0, rgb(11 13 18 / 72%) 42%, transparent 78%);
+  background: linear-gradient(90deg, rgb(0 0 0 / 94%) 0, rgb(0 0 0 / 72%) 42%, transparent 78%);
 }
 .space-fallback {
   background:
-    linear-gradient(90deg, rgb(11 13 18 / 94%) 0, rgb(11 13 18 / 72%) 42%, transparent 78%),
+    linear-gradient(90deg, rgb(0 0 0 / 94%) 0, rgb(0 0 0 / 72%) 42%, transparent 78%),
     url("/images/black-hole-hero.jpg") center / cover no-repeat,
     var(--surface);
 }
@@ -132,7 +136,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   position: absolute;
   inset: 0 calc(50% - 50vw) -1px;
   z-index: -1;
-  background: linear-gradient(to bottom, rgb(11 13 18 / .88), rgb(11 13 18 / .62));
+  background: linear-gradient(to bottom, rgb(0 0 0 / .88), rgb(0 0 0 / .62));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -179,7 +183,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .email-trigger { padding: 0; border: 0; background: none; font: inherit; color: var(--muted); cursor: pointer; }
 .email-trigger:hover, .email-trigger[aria-expanded="true"] { color: var(--text); }
 .email-trigger:focus-visible, .email-copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
-.email-panel { position: absolute; top: calc(100% + 12px); left: 0; z-index: 10; display: flex; align-items: center; gap: 16px; padding: 10px 12px 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: rgb(11 13 18 / .92); backdrop-filter: blur(8px); white-space: nowrap; }
+.email-panel { position: absolute; top: calc(100% + 12px); left: 0; z-index: 10; display: flex; align-items: center; gap: 16px; padding: 10px 12px 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: rgb(0 0 0 / .92); backdrop-filter: blur(8px); white-space: nowrap; }
 .email-address { color: var(--text); font-size: 12px; user-select: all; }
 .email-copy { padding: 4px 8px; border: 1px solid var(--line); border-radius: 5px; background: none; font: inherit; font-size: 11px; color: var(--accent); cursor: pointer; }
 .email-copy:hover { border-color: var(--accent); }
