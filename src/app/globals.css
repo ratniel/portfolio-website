@@ -142,10 +142,10 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 }
 .scroll-progress {
   position: fixed;
-  top: calc(var(--header-height) + 36px);
+  top: calc(var(--header-height) / 2);
   bottom: 44px;
   left: clamp(14px, calc((100vw - 1200px) / 4), 72px);
-  z-index: 15;
+  z-index: 21;
   width: 7px;
   pointer-events: none;
   --progress: 0;
@@ -153,7 +153,10 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .scroll-progress-track, .scroll-progress-fill { position: absolute; inset: 0 3px; }
 .scroll-progress-track { background: var(--line); }
 .scroll-progress-fill { background: linear-gradient(to bottom, rgb(168 185 244 / .15), rgb(168 185 244 / .7)); transform: scaleY(var(--progress)); transform-origin: top; }
-.scroll-progress-end { position: absolute; left: 1px; width: 5px; height: 5px; border: 1px solid #4c5572; border-radius: 50%; background: var(--surface); }
+.scroll-progress-end, .scroll-progress-checkpoint::before { position: absolute; left: 1px; width: 5px; height: 5px; border: 1px solid #4c5572; border-radius: 50%; background: var(--surface); }
+.scroll-progress-checkpoint { position: absolute; left: 50%; width: 32px; height: 32px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: auto; }
+.scroll-progress-checkpoint::before { content: ""; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.scroll-progress-checkpoint:hover::before, .scroll-progress-checkpoint:focus-visible::before { border-color: var(--accent); background: var(--accent); }
 .scroll-progress-end:first-child { top: -3.5px; }
 .scroll-progress-end:last-of-type { bottom: -3.5px; }
 .scroll-progress-marker { position: absolute; inset: 0; transform: translateY(calc(var(--progress) * 100%)); }
@@ -231,7 +234,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
   .site-header, .section-shell { width: min(100% - 40px, 1200px); }
   html { --header-height: 68px; }
   .site-header { gap: 18px; }
-  .scroll-progress { left: 6px; top: calc(var(--header-height) + 24px); bottom: 28px; opacity: .7; }
+  .scroll-progress { left: 6px; bottom: 28px; opacity: .7; }
   .wordmark { font-size: 12px; }
   .site-header nav { gap: clamp(12px, 4vw, 21px); }
   .site-header nav a { font-size: 10px; }

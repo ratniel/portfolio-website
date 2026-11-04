@@ -14,7 +14,7 @@ import { workEntries } from "@/content/work";
 export default function Home() {
   return <>
     <ExperienceLayer />
-    <ScrollProgress />
+    <ScrollProgress items={siteContent.navigation} />
     <Navigation items={siteContent.navigation} name={siteContent.name} />
     <main id="top">
       <Hero name={siteContent.name} {...siteContent.hero} />
