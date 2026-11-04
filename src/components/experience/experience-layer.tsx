@@ -13,6 +13,11 @@ const SpaceExperience = dynamic(
   },
 );
 
+const StardustCursor = dynamic(
+  () => import("@/components/experience/stardust-cursor").then((module) => module.StardustCursor),
+  { ssr: false },
+);
+
 export function ExperienceLayer() {
-  return <SpaceExperience />;
+  return <><SpaceExperience /><StardustCursor /></>;
 }
