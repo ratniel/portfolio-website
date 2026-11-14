@@ -108,6 +108,17 @@ body {
     url("/images/black-hole-hero.jpg") center / cover no-repeat,
     var(--surface);
 }
+.stardust-cursor { position: fixed; inset: 0; z-index: 100; overflow: clip; pointer-events: none; opacity: 0; }
+.stardust-cursor-dot, .stardust-cursor-particle { position: absolute; will-change: transform; }
+.stardust-cursor-dot { top: -3px; left: -3px; width: 6px; height: 6px; }
+.stardust-cursor-dot::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--text); box-shadow: 0 0 0 1px rgb(0 0 0 / .8), 0 0 6px rgb(168 185 244 / .45); transition: transform 120ms; }
+.stardust-cursor[data-interactive] .stardust-cursor-dot::before { transform: scale(1.6); }
+.stardust-cursor-particle { top: -1px; left: -1px; width: 2px; height: 2px; border-radius: 50%; background: var(--accent); opacity: 0; }
+.stardust-cursor-particle:nth-child(3n) { background: var(--text); }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.has-stardust-cursor, html.has-stardust-cursor * { cursor: none !important; }
+  .stardust-cursor[data-active] { opacity: 1; }
+}
 main,
 .site-footer {
   position: relative;

@@ -32,6 +32,8 @@ The fixed, scroll-linked visual layer lives under `src/components/experience/`. 
 
 The page background is true black (`#000000`). CSS masks fade all four edges of the artwork into this background. The same masks apply to the glow copies.
 
+`src/components/experience/stardust-cursor.tsx` adds a dot cursor and a short particle trail. It loads on the client through `experience-layer.tsx`. It uses ten reusable particles. The animation stops when the particles fade. Touch devices and reduced-motion mode keep the normal cursor. Text fields also keep the normal cursor. The overlay does not block clicks or keyboard focus.
+
 ## Keeping this README current
 
 When a change alters the project structure, setup steps, or available scripts, update this README in the same change. Keep the structure and development instructions representative of the repository as it grows.
